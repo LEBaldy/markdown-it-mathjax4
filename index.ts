@@ -8,9 +8,7 @@ for rendering output.
 */
 import type MarkdownIt from "markdown-it";
 
-import type Token from "markdown-it/lib/token";
-import type StateInline from "markdown-it/lib/rules_inline/state_inline";
-import type StateBlock from "markdown-it/lib/rules_block/state_block";
+import type { Token, StateInline, StateBlock } from "markdown-it";
 import * as mathjax from "mathxyjax3";
 
 // Test if potential opening or closing delimieter
@@ -119,7 +117,7 @@ function math_block(
   state: StateBlock,
   start: number,
   end: number,
-  silent: boolean
+  silent: boolean,
 ) {
   let next: number, lastPos: number;
   let found = false,
@@ -193,7 +191,7 @@ function plugin(md: MarkdownIt) {
   md.renderer.rules.math_block = function (tokens: Token[], idx: number) {
     return mathjax.tex2svgHtml(tokens[idx].content, { display: true });
   };
-};
+}
 
-plugin.default = plugin
-export = plugin
+plugin.default = plugin;
+export = plugin;
