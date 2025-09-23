@@ -11,35 +11,7 @@ import type MarkdownIt from "markdown-it";
 import type Token from "markdown-it/lib/token";
 import type StateInline from "markdown-it/lib/rules_inline/state_inline";
 import type StateBlock from "markdown-it/lib/rules_block/state_block";
-import { mathjax } from "mathjax-full/js/mathjax.js";
-import { TeX } from "mathjax-full/js/input/tex.js";
-import { SVG } from "mathjax-full/js/output/svg.js";
-import { liteAdaptor } from "mathjax-full/js/adaptors/liteAdaptor.js";
-import { RegisterHTMLHandler } from "mathjax-full/js/handlers/html.js";
-import { AllPackages } from "mathjax-full/js/input/tex/AllPackages.js";
-import { AssistiveMmlHandler } from "mathjax-full/js/a11y/assistive-mml.js"
-import juice from "juice/client";
-
-interface DocumentOptions {
-  InputJax: TeX<unknown, unknown, unknown>;
-  OutputJax: SVG<unknown, unknown, unknown>;
-}
-
-interface ConvertOptions {
-  display: boolean
-}
-
-function renderMath(content: string, documentOptions: DocumentOptions, convertOptions: ConvertOptions): string {
-  const adaptor = liteAdaptor();
-  const handler = RegisterHTMLHandler(adaptor);
-  AssistiveMmlHandler(handler);
-  const mathDocument = mathjax.document(content, documentOptions);
-  const html = adaptor.outerHTML(
-    mathDocument.convert(content, convertOptions)
-  );
-  const stylesheet = adaptor.outerHTML(documentOptions.OutputJax.styleSheet(mathDocument) as any)
-  return juice(html+stylesheet)
-}
+import * as mathjax from "mathxyjax3";
 
 // Test if potential opening or closing delimieter
 // Assumes that there is a "$" at state.src[pos]
@@ -209,29 +181,17 @@ function math_block(
   return true;
 }
 
-function plugin(md: MarkdownIt, options: any) {
-  // Default options
-
-  const documentOptions = {
-    InputJax: new TeX({ packages: AllPackages,  ...options?.tex }),
-    OutputJax: new SVG({ fontCache: 'none',  ...options?.svg })
-  }
-  const convertOptions = {
-    display: false
-  }
-
+function plugin(md: MarkdownIt) {
   // set MathJax as the renderer for markdown-it-simplemath
   md.inline.ruler.after("escape", "math_inline", math_inline);
   md.block.ruler.after("blockquote", "math_block", math_block, {
     alt: ["paragraph", "reference", "blockquote", "list"],
   });
   md.renderer.rules.math_inline = function (tokens: Token[], idx: number) {
-    convertOptions.display = false;
-    return renderMath(tokens[idx].content, documentOptions, convertOptions)
+    return mathjax.tex2svgHtml(tokens[idx].content, { display: false });
   };
   md.renderer.rules.math_block = function (tokens: Token[], idx: number) {
-    convertOptions.display = true;
-    return renderMath(tokens[idx].content, documentOptions, convertOptions)
+    return mathjax.tex2svgHtml(tokens[idx].content, { display: true });
   };
 };
 
