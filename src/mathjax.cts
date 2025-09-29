@@ -1,3 +1,4 @@
-const esmRequire = require("esm")(module, { await: true });
-
-export const { tex2svgHtml } = esmRequire("mathxyjax3");
+import {deasync}from "@se-oss/deasync";
+import util from "node:util";
+const import_ = deasync(util.callbackify((path: string) => import(path)));
+export const { tex2svgHtml } = import_("mathxyjax3");
