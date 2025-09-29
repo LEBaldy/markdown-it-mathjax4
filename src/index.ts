@@ -6,10 +6,8 @@ https://github.com/runarberg/markdown-it-math
 It differs in that it takes (a subset of) LaTeX as input and relies on MathJax
 for rendering output.
 */
-import type MarkdownIt from "markdown-it";
-
-import type { Token, StateInline, StateBlock } from "markdown-it";
-import * as mathjax from "mathxyjax3";
+import type { Token, StateInline, StateBlock, PluginSimple } from "markdown-it";
+import * as mathjax from "#mathjax";
 
 // Test if potential opening or closing delimieter
 // Assumes that there is a "$" at state.src[pos]
@@ -179,7 +177,9 @@ function math_block(
   return true;
 }
 
-function plugin(md: MarkdownIt) {
+type MathjaxPlugin = PluginSimple & { default: PluginSimple };
+
+const plugin: MathjaxPlugin = (md) => {
   // set MathJax as the renderer for markdown-it-simplemath
   md.inline.ruler.after("escape", "math_inline", math_inline);
   md.block.ruler.after("blockquote", "math_block", math_block, {
@@ -191,7 +191,7 @@ function plugin(md: MarkdownIt) {
   md.renderer.rules.math_block = function (tokens: Token[], idx: number) {
     return mathjax.tex2svgHtml(tokens[idx].content, { display: true });
   };
-}
+};
 
 plugin.default = plugin;
 export = plugin;
