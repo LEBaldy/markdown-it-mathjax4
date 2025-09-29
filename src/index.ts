@@ -6,8 +6,13 @@ https://github.com/runarberg/markdown-it-math
 It differs in that it takes (a subset of) LaTeX as input and relies on MathJax
 for rendering output.
 */
-import type { Token, StateInline, StateBlock, PluginSimple } from "markdown-it";
+import type MarkdownIt = require("markdown-it");
 import * as mathjax from "#mathjax";
+
+type Token = MarkdownIt.Token;
+type StateInline = MarkdownIt.StateInline;
+type StateBlock = MarkdownIt.StateBlock;
+type PluginSimple = MarkdownIt.PluginSimple;
 
 // Test if potential opening or closing delimieter
 // Assumes that there is a "$" at state.src[pos]
