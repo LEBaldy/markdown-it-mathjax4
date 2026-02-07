@@ -1,5 +1,5 @@
 {
-  "name": "markdown-it-mathjax3",
+  "name": "markdown-it-mathjax4",
   "version": "5.2.0",
   "description": "Fast math support for markdown-it with MathJax",
   "type": "module",
@@ -11,7 +11,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+ssh://git@github.com:nzt/markdown-it-mathjax3.git"
+    "url": "git+ssh://git@github.com:nzt/markdown-it-mathjax4.git"
   },
   "keywords": [
     "markdown",
@@ -24,8 +24,7 @@
   "author": "TANIGUCHI Masaya",
   "license": "MIT",
   "dependencies": {
-    "@se-oss/deasync": "^1.0.1",
-    "mathxyjax3": "^0.8.3"
+    "@se-oss/deasync": "^1.0.1"
   },
   "devDependencies": {
     "@types/markdown-it": "^14.1.2",
